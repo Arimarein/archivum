@@ -12,6 +12,7 @@
 }
 
 
+/* RESET */
 
 * {
 
@@ -20,10 +21,19 @@
 }
 
 
+html {
+
+    scroll-behavior: smooth;
+
+}
+
 
 body {
 
     margin: 0;
+    padding: 0;
+
+    width: 100%;
 
     background: var(--background);
 
@@ -37,17 +47,25 @@ body {
 
 
 
+/* MAIN CONTAINER */
+
 main {
 
     width: 100%;
+
+    overflow-x: hidden;
 
 }
 
 
 
+/* INTRO */
+
 .intro {
 
     min-height: 100vh;
+
+    width: 100%;
 
     display: flex;
 
@@ -63,35 +81,49 @@ main {
 
 
 
+/* LOGO */
+
 h1 {
 
+    margin: 0;
+
     font-family: "Playfair Display", serif;
+
+    font-weight: 400;
 
     font-size: clamp(2.5rem, 6vw, 5rem);
 
     letter-spacing: 0.45em;
 
-    font-weight: 400;
+    text-align: center;
 
-    margin: 0;
+    transform: translateX(0.2em);
 
 }
 
 
 
+/* MOTTO */
+
 .motto {
 
-    margin-top: 35px;
+    margin-top: 40px;
 
     color: var(--silver);
 
     font-style: italic;
 
+    letter-spacing: 0.05em;
+
 }
 
 
 
+/* EXHIBIT / BANNER PLACEHOLDER */
+
 .exhibit {
+
+    width: 100%;
 
     height: 90vh;
 
@@ -119,15 +151,21 @@ h1 {
 
     color: var(--silver);
 
-    letter-spacing: 0.3em;
+    letter-spacing: 0.35em;
+
+    text-align: center;
 
 }
 
 
 
+/* COLLECTION SECTIONS */
+
 .collection {
 
-    min-height: 70vh;
+    width: 100%;
+
+    min-height: 75vh;
 
     display: flex;
 
@@ -139,17 +177,23 @@ h1 {
 
     text-align: center;
 
+    padding: 40px 20px;
+
 }
 
 
 
 h2 {
 
+    margin: 0;
+
     font-family: "Playfair Display", serif;
 
-    font-size: clamp(2rem, 4vw, 3rem);
-
     font-weight: 400;
+
+    color: var(--text);
+
+    font-size: clamp(2rem, 4vw, 3.5rem);
 
     letter-spacing: 0.2em;
 
@@ -158,6 +202,8 @@ h2 {
 
 
 .collection p {
+
+    margin-top: 25px;
 
     color: var(--silver);
 
@@ -169,14 +215,52 @@ h2 {
 
 
 
+/* DIVIDERS */
+
+hr {
+
+    width: 70%;
+
+    height: 1px;
+
+    border: none;
+
+    background: var(--line);
+
+}
+
+
+
+/* MOBILE */
+
 @media(max-width:700px) {
 
 
     h1 {
 
-        letter-spacing: 0.25em;
+        font-size: 2.3rem;
 
-        font-size: 2.5rem;
+        letter-spacing: 0.18em;
+
+        transform: translateX(0.09em);
+
+    }
+
+
+    .motto {
+
+        margin-top: 25px;
+
+        font-size: 0.95rem;
+
+    }
+
+
+    h2 {
+
+        letter-spacing: 0.12em;
+
+        font-size: 2rem;
 
     }
 
