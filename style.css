@@ -1,0 +1,71 @@
+/* ===================================
+   ARCHIVUM — Base Style
+=================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:wght@400;500;600&display=swap');
+
+
+:root {
+    --background: #121417;
+    --text: #E9E3D8;
+    --silver: #AEB7C2;
+    --blue: #9FB9C9;
+    --line: rgba(174,183,194,0.25);
+}
+
+
+* {
+    box-sizing: border-box;
+}
+
+
+body {
+    margin: 0;
+    padding: 0;
+
+    background: var(--background);
+    color: var(--text);
+
+    font-family: "Inter", sans-serif;
+    font-weight: 300;
+
+    min-height: 100vh;
+}
+
+
+h1,
+h2 {
+    font-family: "Playfair Display", serif;
+    font-weight: 400;
+}
+
+
+h1 {
+    letter-spacing: 0.45em;
+    font-size: clamp(2rem, 5vw, 4rem);
+
+    margin-bottom: 20px;
+}
+
+
+h2 {
+    letter-spacing: 0.15em;
+    color: var(--silver);
+}
+
+
+p {
+    line-height: 1.8;
+}
+
+
+hr {
+    border: none;
+    height: 1px;
+
+    background: var(--line);
+
+    margin: 80px auto;
+
+    width: 80%;
+}
