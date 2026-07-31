@@ -1,0 +1,24 @@
+{
+    "mainCollection": [
+
+        {
+            "title": "Test01",
+            "type": "book",
+            "year": "2027",
+            "image": "images/covers/test01-cover.webp"
+        }
+
+    ],
+
+
+    "additionalWorks": [
+
+        {
+            "title": "Test14",
+            "type": "novella",
+            "year": "2026",
+            "image": "images/miniatures/Test14 Miniature.webp"
+        }
+
+    ]
+}

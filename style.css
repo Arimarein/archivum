@@ -1,0 +1,2225 @@
+/* ==========================================================
+   ARCHIVUM
+   Main Design System
+   Navigation Version
+   ========================================================== */
+
+
+/* ==========================================================
+   FONTS
+   ========================================================== */
+
+
+@font-face {
+
+    font-family:"Caviar Dreams";
+
+    src:url("fonts/CaviarDreams.ttf")
+    format("truetype");
+
+    font-weight:400;
+
+}
+
+
+@font-face {
+
+    font-family:"Caviar Dreams";
+
+    src:url("fonts/CaviarDreams_Bold.ttf")
+    format("truetype");
+
+    font-weight:700;
+
+}
+
+
+@font-face {
+
+    font-family:"Playfair Display";
+
+    src:url("fonts/PlayfairDisplay-VariableFont_wght.ttf")
+    format("truetype");
+
+}
+
+
+@font-face {
+
+    font-family:"Inter";
+
+    src:url("fonts/Inter-VariableFont_opsz,wght.ttf")
+    format("truetype");
+
+}
+
+
+
+
+
+
+/* ==========================================================
+   VARIABLES
+   ========================================================== */
+
+
+:root {
+
+
+    --background:#f5f1e8;
+
+    --text-primary:#24211d;
+
+    --text-secondary:#6e675d;
+
+
+    --title-font:"Playfair Display", serif;
+
+    --heading-font:"Caviar Dreams", serif;
+
+    --body-font:"Inter", sans-serif;
+
+
+    --content-width:1200px;
+
+
+    --grid-line:rgba(54, 47, 39, .09);
+
+    --grid-highlight:rgba(54, 47, 39, .22);
+
+
+    --ambient-light-one:rgba(207, 178, 126, .34);
+
+    --ambient-light-two:rgba(232, 216, 185, .38);
+
+
+}
+
+
+
+
+
+[data-theme="dark"] {
+
+
+    --background:#171411;
+
+    --text-primary:#e8dfd1;
+
+    --text-secondary:#a99f91;
+
+
+    --grid-line:rgba(232, 223, 209, .07);
+
+    --grid-highlight:rgba(232, 223, 209, .2);
+
+
+    --ambient-light-one:rgba(123, 82, 48, .38);
+
+    --ambient-light-two:rgba(84, 55, 35, .42);
+
+
+}
+
+
+
+
+
+
+
+
+
+/* ==========================================================
+   RESET
+   ========================================================== */
+
+
+* {
+
+
+    box-sizing:border-box;
+
+    margin:0;
+
+    padding:0;
+
+
+}
+
+
+
+html {
+
+
+    scroll-behavior:smooth;
+
+    scroll-snap-type:y mandatory;
+
+
+}
+
+
+
+body {
+
+
+    background:var(--background);
+
+    color:var(--text-primary);
+
+    font-family:var(--body-font);
+
+    min-height:100vh;
+
+
+    transition:
+
+        background-color .4s ease,
+
+        color .4s ease;
+
+
+    isolation:isolate;
+
+
+}
+
+
+
+/* ==========================================================
+   INTERACTIVE BACKGROUND GRID
+   ========================================================== */
+
+
+/* ==========================================================
+   AMBIENT LIGHT
+   ========================================================== */
+
+
+.ambient-light {
+
+
+    position:fixed;
+
+    inset:0;
+
+
+    overflow:hidden;
+
+    pointer-events:none;
+
+
+    z-index:0;
+
+
+}
+
+
+
+.ambient-light::before,
+.ambient-light::after {
+
+
+    content:"";
+
+
+    position:absolute;
+
+    width:76vmax;
+
+    height:76vmax;
+
+
+    border-radius:50%;
+
+
+    background:radial-gradient(
+        circle,
+        var(--ambient-light-one) 0,
+        transparent 68%
+    );
+
+
+    filter:blur(28px);
+
+
+    will-change:transform;
+
+
+}
+
+
+
+.ambient-light::before {
+
+
+    top:-28vmax;
+
+    left:-12vmax;
+
+
+    animation:ambient-light-one 26s ease-in-out infinite alternate;
+
+
+}
+
+
+
+.ambient-light::after {
+
+
+    right:-18vmax;
+
+    bottom:-32vmax;
+
+
+    background:radial-gradient(
+        circle,
+        var(--ambient-light-two) 0,
+        transparent 70%
+    );
+
+
+    animation:ambient-light-two 32s ease-in-out infinite alternate;
+
+
+}
+
+
+
+@keyframes ambient-light-one {
+
+
+    to {
+
+
+        transform:translate(18vw, 14vh) scale(1.12);
+
+
+    }
+
+
+}
+
+
+
+@keyframes ambient-light-two {
+
+
+    to {
+
+
+        transform:translate(-16vw, -12vh) scale(1.08);
+
+
+    }
+
+
+}
+
+
+
+@media(prefers-reduced-motion:reduce){
+
+
+    .ambient-light::before,
+    .ambient-light::after {
+
+
+        animation:none;
+
+
+    }
+
+
+}
+
+
+
+
+
+
+body::before,
+body::after {
+
+
+    content:"";
+
+
+    position:fixed;
+
+    inset:0;
+
+
+    pointer-events:none;
+
+
+    z-index:1;
+
+
+    background-image:
+
+        linear-gradient(
+            to right,
+            var(--grid-line) 1px,
+            transparent 1px
+        ),
+
+        linear-gradient(
+            to bottom,
+            var(--grid-line) 1px,
+            transparent 1px
+        );
+
+
+    background-size:52px 52px;
+
+
+}
+
+
+
+body::before {
+
+
+    opacity:.45;
+
+
+}
+
+
+
+body::after {
+
+
+    background-image:
+
+        linear-gradient(
+            to right,
+            var(--grid-highlight) 1px,
+            transparent 1px
+        ),
+
+        linear-gradient(
+            to bottom,
+            var(--grid-highlight) 1px,
+            transparent 1px
+        );
+
+
+    opacity:.8;
+
+
+    -webkit-mask-image:
+
+        radial-gradient(
+            180px circle at var(--grid-x, -20vw) var(--grid-y, -20vh),
+            #000 0,
+            transparent 72%
+        );
+
+
+    mask-image:
+
+        radial-gradient(
+            180px circle at var(--grid-x, -20vw) var(--grid-y, -20vh),
+            #000 0,
+            transparent 72%
+        );
+
+
+}
+
+
+
+main {
+
+
+    position:relative;
+
+    z-index:2;
+
+
+}
+
+
+
+
+
+
+
+
+
+/* ==========================================================
+   HEADER
+   ========================================================== */
+
+
+.site-header {
+
+
+    position:fixed;
+
+    top:25px;
+
+    right:35px;
+
+    z-index:100;
+
+
+}
+
+
+
+.language-switcher {
+
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+
+}
+
+
+
+.language-button,
+.theme-button {
+
+
+    background:none;
+
+    border:none;
+
+    cursor:pointer;
+
+    color:var(--text-secondary);
+
+    font-family:var(--body-font);
+
+
+}
+
+
+
+.language-button {
+
+
+    font-size:.75rem;
+
+    letter-spacing:.15em;
+
+
+}
+
+
+
+.language-button.active {
+
+
+    color:var(--text-primary);
+
+
+}
+
+
+
+.theme-button {
+
+
+    font-size:1rem;
+
+
+}
+
+
+
+
+
+
+
+
+
+/* ==========================================================
+   SECTIONS
+   ========================================================== */
+
+
+.hero {
+
+
+    min-height:100vh;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    text-align:center;
+
+
+    scroll-snap-align:start;
+
+
+}
+
+
+
+
+.featured-exhibit {
+
+
+    min-height:100vh;
+
+    position:relative;
+
+    overflow:hidden;
+
+    display:flex;
+
+    align-items:center;
+
+
+    scroll-snap-align:start;
+
+
+}
+
+
+
+
+.section {
+
+
+    min-height:100vh;
+
+    max-width:var(--content-width);
+
+    margin:auto;
+
+
+    padding:
+
+        120px
+
+        5vw;
+
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+
+    scroll-snap-align:start;
+
+
+}
+
+
+
+
+
+
+
+
+
+/* ==========================================================
+   SECTION SEPARATORS
+   ========================================================== */
+
+
+main > section:not(:first-child) {
+
+
+    position:relative;
+
+
+}
+
+
+
+main > section:not(:first-child)::before {
+
+
+    content:"";
+
+
+    position:absolute;
+
+    top:0;
+
+    left:50%;
+
+
+    width:clamp(110px, 16vw, 190px);
+
+    height:1px;
+
+
+    transform:translateX(-50%);
+
+
+    background:var(--text-secondary);
+
+    opacity:.3;
+
+
+    z-index:2;
+
+
+}
+
+
+
+
+
+
+/* ==========================================================
+   HERO
+   ========================================================== */
+
+
+.site-title {
+
+
+    font-family:var(--title-font);
+
+    font-weight:400;
+
+    font-size:clamp(3rem,7vw,6rem);
+
+    letter-spacing:.32em;
+
+    margin-left:.32em;
+
+
+}
+
+
+
+.site-motto {
+
+
+    margin-top:35px;
+
+    font-family:var(--title-font);
+
+    font-style:italic;
+
+    color:var(--text-secondary);
+
+    font-size:1.2rem;
+
+
+}
+
+
+
+
+
+
+
+
+
+/* ==========================================================
+   BANNER
+   ========================================================== */
+
+
+.hero-banner {
+
+
+    width:100%;
+
+    height:100vh;
+
+    overflow:hidden;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+
+}
+
+
+
+.hero-banner img {
+
+
+    display:block;
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:contain;
+
+    object-position:center;
+
+
+}
+
+
+
+
+
+
+
+
+
+/* ==========================================================
+   HEADERS
+   ========================================================== */
+
+
+.section-header {
+
+
+    text-align:center;
+
+    margin-bottom:60px;
+
+
+}
+
+
+
+.section-header h2 {
+
+
+    font-family:var(--heading-font);
+
+    font-size:2rem;
+
+    font-weight:400;
+
+    letter-spacing:.18em;
+
+
+}
+
+
+
+.section-header p {
+
+
+    margin-top:18px;
+
+    color:var(--text-secondary);
+
+
+}
+
+
+
+
+
+
+
+
+
+/* ==========================================================
+   COLLECTION
+   ========================================================== */
+
+
+.collection-grid {
+
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    justify-content:center;
+
+    gap:90px;
+
+
+}
+
+
+
+
+
+
+
+
+
+/* ==========================================================
+   WORK CARD
+   ========================================================== */
+
+
+.work-card {
+
+
+    width:100%;
+
+    max-width:260px;
+
+    text-align:center;
+
+
+    opacity:0;
+
+
+    transform:
+
+        translateY(45px);
+
+
+    transition:
+
+        opacity .7s ease,
+
+        transform .7s ease;
+
+
+}
+
+
+
+.work-card.visible {
+
+
+    opacity:1;
+
+
+    transform:
+
+        translateY(0);
+
+
+}
+
+
+
+
+.work-card.visible:hover {
+
+
+    transform:
+
+        translateY(-8px);
+
+
+}
+
+
+
+
+
+.work-image {
+
+
+    width:100%;
+
+    overflow:hidden;
+
+
+}
+
+
+
+
+.work-image img {
+
+
+    width:100%;
+
+    display:block;
+
+
+}
+
+
+
+
+
+
+.work-title {
+
+
+    margin-top:25px;
+
+    font-family:var(--title-font);
+
+    font-size:1.15rem;
+
+    font-weight:400;
+
+
+}
+
+
+
+
+
+
+/* ==========================================================
+   WORK DETAILS
+   ========================================================== */
+
+
+.work-details {
+
+
+    opacity:0;
+
+
+    transition:
+
+        opacity .35s ease;
+
+
+}
+
+
+
+
+.work-card:hover .work-details {
+
+
+    opacity:1;
+
+
+}
+
+
+
+
+.work-card:hover .work-details {
+
+
+    opacity:1;
+
+    transform:translateY(0);
+
+
+}
+
+
+
+
+
+.work-meta {
+
+
+    margin-top:10px;
+
+    color:var(--text-secondary);
+
+    font-size:.8rem;
+
+    letter-spacing:.1em;
+
+
+}
+
+
+
+
+
+
+
+
+
+/* ==========================================================
+   SECTION NAVIGATION
+   ========================================================== */
+
+
+.section-navigation {
+
+
+    position:fixed;
+
+
+    right:35px;
+
+    top:50%;
+
+
+    transform:translateY(-50%);
+
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    gap:22px;
+
+
+    z-index:50;
+
+
+    opacity:0;
+
+    pointer-events:none;
+
+
+    transition:
+
+        opacity .5s ease;
+
+
+}
+
+
+
+.section-navigation::before {
+
+
+    content:"";
+
+
+    position:absolute;
+
+
+    top:0;
+
+    bottom:0;
+
+
+    width:1px;
+
+
+    background:
+
+        var(--text-secondary);
+
+
+    opacity:.25;
+
+
+    z-index:-1;
+
+
+}
+
+
+
+
+.section-navigation.visible {
+
+
+    opacity:1;
+
+    pointer-events:auto;
+
+
+}
+
+
+
+
+
+
+
+.nav-dot {
+
+
+    width:9px;
+
+    height:9px;
+
+
+    border-radius:50%;
+
+
+    border:
+
+        1px solid var(--text-secondary);
+
+
+    background:var(--background);
+
+
+    cursor:pointer;
+
+
+    padding:0;
+
+
+    transition:
+
+        transform .35s ease,
+
+        background-color .35s ease,
+
+        border-color .35s ease;
+
+
+}
+
+
+
+
+
+.nav-dot:hover {
+
+
+    transform:scale(1.35);
+
+
+}
+
+
+
+
+
+.nav-dot.active {
+
+
+    width:11px;
+
+    height:11px;
+
+
+    background:
+
+        var(--text-primary);
+
+
+    border-color:
+
+        var(--text-primary);
+
+
+    transform:scale(1.4);
+
+
+}
+
+
+
+
+
+.nav-dot:hover {
+
+
+    transform:scale(1.4);
+
+    opacity:1;
+
+
+}
+
+
+
+
+
+.nav-dot.active {
+
+
+    width:10px;
+
+    height:10px;
+
+
+    background-color:var(--text-primary);
+
+    border-color:var(--text-primary);
+
+
+    transform:scale(1.5);
+
+
+    opacity:1;
+
+
+}
+
+
+
+/* ==========================================================
+   CONNECT FOOTER LAYOUT
+   ========================================================== */
+
+
+.connect {
+
+
+    display:flex;
+
+    flex-direction:column;
+
+
+}
+
+
+
+
+
+.connect-content {
+
+
+    flex:0;
+
+
+}
+
+
+
+
+
+
+
+/* ==========================================================
+   FOOTER
+   ========================================================== */
+
+
+.site-footer {
+
+
+    margin-top:60px;
+
+
+    padding-bottom:20px;
+
+
+    text-align:center;
+
+
+}
+
+
+
+
+
+.site-footer p {
+
+
+    margin:0;
+
+
+    font-family:var(--body-font);
+
+
+    font-size:.9rem;
+
+
+    letter-spacing:.08em;
+
+
+    opacity:.65;
+
+
+}
+
+
+/* ==========================================================
+   WORK CARD REVEAL ANIMATION
+   ========================================================== */
+
+
+.work-card {
+
+
+    opacity:0;
+
+
+    transform:
+
+        translateY(45px);
+
+
+
+    transition:
+
+        opacity .7s ease,
+
+        transform .7s ease;
+
+
+}
+
+
+
+
+.work-card.visible {
+
+
+    opacity:1;
+
+
+    transform:
+
+        translateY(0);
+
+
+}
+
+
+
+
+
+
+
+
+/* ==========================================================
+   STAGGER EFFECT
+   ========================================================== */
+
+
+.work-card:nth-child(1) {
+
+
+    transition-delay:.05s;
+
+
+}
+
+
+
+.work-card:nth-child(2) {
+
+
+    transition-delay:.2s;
+
+
+}
+
+
+
+.work-card:nth-child(3) {
+
+
+    transition-delay:.35s;
+
+
+}
+
+
+
+.work-card:nth-child(4) {
+
+
+    transition-delay:.5s;
+
+
+}
+
+
+
+.work-card:nth-child(5) {
+
+
+    transition-delay:.65s;
+
+
+}
+
+/* ==========================================================
+   SECTION HEADER REVEAL
+   ========================================================== */
+
+
+.reveal {
+
+
+    opacity:0;
+
+
+    transform:
+
+        translateY(25px);
+
+
+
+    transition:
+
+        opacity .8s ease,
+
+        transform .8s ease;
+
+
+}
+
+
+
+
+.reveal.visible {
+
+
+    opacity:1;
+
+
+    transform:
+
+        translateY(0);
+
+
+}
+
+
+/* ==========================================================
+   AUTHOR SECTION
+   ========================================================== */
+
+
+.author-profile {
+
+
+    display:flex;
+
+
+    justify-content:center;
+
+
+    align-items:center;
+
+
+    gap:80px;
+
+
+    margin-top:70px;
+
+
+}
+
+
+
+
+.author-image {
+
+
+    width:340px;
+
+
+    height:340px;
+
+
+    overflow:hidden;
+
+
+    flex-shrink:0;
+
+
+}
+
+
+
+
+.author-image img {
+
+
+    width:100%;
+
+
+    height:100%;
+
+
+    object-fit:cover;
+
+
+    display:block;
+
+
+}
+
+
+
+
+
+
+.author-content {
+
+
+    height:340px;
+
+    width:520px;
+
+
+    display:flex;
+
+
+    flex-direction:column;
+
+
+    justify-content:center;
+
+
+    max-width:520px;
+
+
+}
+
+
+
+
+
+
+/* ==========================================================
+   AUTHOR TEXT
+   ========================================================== */
+
+
+.author-text {
+
+
+    margin:0;
+
+
+    font-family:var(--body-font);
+
+
+    font-size:1.1rem;
+
+
+    line-height:1.8;
+
+
+    max-width:520px;
+
+
+    position:relative;
+
+
+    padding-left:30px;
+
+
+}
+
+
+
+
+
+
+/* ==========================================================
+   AUTHOR VERTICAL LINE
+   ========================================================== */
+
+
+.author-text::before {
+
+
+    content:"";
+
+
+    position:absolute;
+
+
+    left:0;
+
+
+    top:0;
+
+
+    width:1px;
+
+
+    height:0;
+
+
+    background:currentColor;
+
+
+    transition:
+
+        height 1s ease;
+
+
+}
+
+
+
+
+
+
+/* ==========================================================
+   AUTHOR TEXT MASK
+   ========================================================== */
+
+
+.author-text span {
+
+
+    display:block;
+
+
+    opacity:0;
+
+
+    clip-path:polygon(
+        0 0,
+        0 0,
+        0 100%,
+        0 100%
+    );
+
+
+    transition:
+
+        opacity .2s ease,
+
+        clip-path 1.2s ease .5s;
+
+
+}
+
+
+
+
+
+
+/* ==========================================================
+   AUTHOR ACTIVE
+   ========================================================== */
+
+
+.reveal-author.visible .author-text::before {
+
+
+    height:100%;
+
+
+}
+
+
+
+.reveal-author.visible .author-text span {
+
+
+    opacity:1;
+
+
+    clip-path:polygon(
+        0 0,
+        100% 0,
+        100% 100%,
+        0 100%
+    );
+
+
+}
+
+
+
+
+
+
+/* ==========================================================
+   AUTHOR TYPING CURSOR
+   ========================================================== */
+
+
+.author-text span.typing::after {
+
+
+    content:"";
+
+
+    display:inline-block;
+
+
+    height:1.1em;
+
+    margin-left:4px;
+
+
+    vertical-align:-.2em;
+
+
+    border-left:1px solid currentColor;
+
+
+    animation:typing-cursor .7s steps(1) infinite;
+
+
+}
+
+
+
+@keyframes typing-cursor {
+
+
+    50% {
+
+
+        opacity:0;
+
+
+    }
+
+
+}
+
+
+
+
+
+
+/* ==========================================================
+   AUTHOR IMAGE REVEAL
+   ========================================================== */
+
+
+.reveal-author .author-image {
+
+
+    opacity:0;
+
+
+    transform:
+        translateX(-35px);
+
+
+    transition:
+
+        opacity .9s ease,
+
+        transform .9s ease;
+
+
+}
+
+
+
+
+
+.reveal-author.visible .author-image {
+
+
+    opacity:1;
+
+
+    transform:
+        translateX(0);
+
+
+}
+
+
+/* ==========================================================
+   MOBILE
+   ========================================================== */
+
+
+@media(max-width:768px){
+
+
+    html {
+
+        scroll-snap-type:none;
+
+    }
+
+
+
+    .hero,
+    .featured-exhibit,
+    .section {
+
+
+        scroll-snap-align:none;
+
+
+    }
+
+
+
+    .section-navigation {
+
+
+        display:none;
+
+
+    }
+
+
+
+    .site-header {
+
+
+        top:20px;
+
+        right:20px;
+
+
+    }
+
+
+
+    .site-title {
+
+
+        font-size:3rem;
+
+        letter-spacing:.22em;
+
+
+    }
+
+
+
+    .section {
+
+
+        padding:
+
+            80px
+
+            5vw;
+
+
+    }
+
+
+
+    .work-card {
+
+
+        width:250px;
+
+
+    }
+
+
+
+    .author-profile {
+
+
+        flex-direction:column;
+
+        gap:35px;
+
+        margin-top:50px;
+
+
+    }
+
+
+
+    .author-image {
+
+
+        width:min(240px, 72vw);
+
+        height:min(240px, 72vw);
+
+
+    }
+
+
+
+    .reveal-author .author-image {
+
+
+        transform:translateY(-35px);
+
+
+    }
+
+
+
+    .reveal-author.visible .author-image {
+
+
+        transform:translateY(0);
+
+
+    }
+
+
+
+    .author-content {
+
+
+        width:100%;
+
+        height:auto;
+
+
+    }
+
+
+
+    .author-text {
+
+
+        max-width:none;
+
+        padding-top:30px;
+
+        padding-left:0;
+
+
+    }
+
+
+
+    .author-text::before {
+
+
+        top:0;
+
+        width:0;
+
+        height:1px;
+
+        transition:width 1s ease;
+
+
+    }
+
+
+
+    .reveal-author.visible .author-text::before {
+
+
+        width:100%;
+
+        height:1px;
+
+
+    }
+
+
+}
+
+/* ==========================================================
+   CONNECT SECTION
+   ========================================================== */
+
+
+.connect-content {
+
+
+    max-width:700px;
+
+
+    margin:80px auto 0;
+
+
+    display:flex;
+
+
+    flex-direction:column;
+
+
+    gap:60px;
+
+
+}
+
+
+
+
+
+.connect-entry {
+
+
+    position:relative;
+
+
+    padding-left:30px;
+
+
+}
+
+
+
+
+
+.connect-entry::before {
+
+
+    content:"";
+
+
+    position:absolute;
+
+
+    left:0;
+
+
+    top:0;
+
+
+    width:1px;
+
+
+    height:100%;
+
+
+    background:currentColor;
+
+
+    opacity:.35;
+
+
+}
+
+
+
+
+
+.connect-entry h3 {
+
+
+    margin:0 0 15px;
+
+
+    font-family:var(--title-font);
+
+
+    font-size:1.5rem;
+
+
+    font-weight:400;
+
+
+}
+
+
+
+
+
+.connect-entry p {
+
+
+    margin:0 0 15px;
+
+
+    font-family:var(--body-font);
+
+
+    line-height:1.8;
+
+
+}
+
+
+
+
+
+.connect-entry a {
+
+
+    font-family:var(--body-font);
+
+
+    text-decoration:none;
+
+
+    color:inherit;
+
+
+    transition:opacity .3s ease;
+
+
+}
+
+
+
+
+
+.connect-entry a:hover {
+
+
+    opacity:.6;
+
+
+}
+
+/* TEST FOOTER */
+
+
+.site-footer {
+
+    display:block;
+
+    text-align:center;
+
+    margin-top:100px;
+
+    padding:40px;
+
+}
+
+
+.site-footer p {
+
+    display:block;
+
+    margin:0;
+
+}
+
+
+
+/* ==========================================================
+   HIDDEN EASTER EGG
+   ========================================================== */
+
+
+.hidden-easter-egg {
+
+
+    display:none;
+
+
+}
+
+
+
+@media (min-width:900px) {
+
+
+    .hidden-easter-egg {
+
+
+        display:block;
+
+
+        text-align:center;
+
+
+        padding:40px 0 80px;
+
+
+    }
+
+
+
+    .hidden-easter-egg p {
+
+
+        margin:0;
+
+
+        font-family:
+            "Playfair Display",
+            serif;
+
+
+        font-style:italic;
+
+
+        font-size:1.05rem;
+
+
+        opacity:.45;
+
+
+        letter-spacing:.03em;
+
+
+    }
+
+
+}
