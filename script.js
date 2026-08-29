@@ -23,6 +23,10 @@ document.addEventListener(
 
 
 
+        initializeHeroIntro();
+
+
+
         const savedLanguage =
             loadSavedLanguage();
 
@@ -64,6 +68,9 @@ document.addEventListener(
         initializeSectionNavigation();
 
 
+        initializeMacSectionScroll();
+
+
         initializeReveal();
 
 
@@ -81,6 +88,180 @@ document.addEventListener(
 
 
 
+
+
+
+/* ==========================================================
+   HERO INTRODUCTION
+   ========================================================== */
+
+
+function initializeHeroIntro(){
+
+
+    const title =
+        document.querySelector(
+            ".site-title"
+        );
+
+
+    const motto =
+        document.querySelector(
+            ".site-motto"
+        );
+
+
+    if(
+        !title ||
+        !motto
+    ){
+
+
+        return;
+
+
+    }
+
+
+    const target =
+        title.textContent.trim();
+
+
+    if(
+        window.matchMedia(
+            "(prefers-reduced-motion: reduce)"
+        ).matches
+    ){
+
+
+        title.textContent =
+            target;
+
+
+        return;
+
+
+    }
+
+
+    const alphabet =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+
+    const duration =
+        680;
+
+
+    const interval =
+        55;
+
+
+    let elapsed =
+        0;
+
+
+    function scrambleTitle(){
+
+
+        title.textContent =
+            target
+                .split(
+                    ""
+                )
+                .map(
+                    (character,index) => {
+
+
+                        const resolvedCharacters =
+                            Math.floor(
+                                elapsed /
+                                (duration / target.length)
+                            );
+
+
+                        return index < resolvedCharacters
+                            ? character
+                            : alphabet[
+                                Math.floor(
+                                    Math.random() * alphabet.length
+                                )
+                            ];
+
+
+                    }
+                )
+                .join(
+                    ""
+                );
+
+
+    }
+
+
+    motto.classList.add(
+        "hero-motto-intro"
+    );
+
+
+    title.setAttribute(
+        "aria-label",
+        target
+    );
+
+
+    scrambleTitle();
+
+
+    const timer =
+        window.setInterval(
+            () => {
+
+
+                elapsed +=
+                    interval;
+
+
+                if(elapsed >= duration){
+
+
+                    window.clearInterval(
+                        timer
+                    );
+
+
+                    title.textContent =
+                        target;
+
+
+                    window.setTimeout(
+                        () => {
+
+
+                            motto.classList.add(
+                                "is-visible"
+                            );
+
+
+                        },
+                        80
+                    );
+
+
+                    return;
+
+
+                }
+
+
+                scrambleTitle();
+
+
+            },
+            interval
+        );
+
+
+}
 
 
 
@@ -318,6 +499,18 @@ function createCollection(
 function createWorkCard(work) {
 
 
+    const localizedWork = {
+        ...work,
+        ...(work.localizations?.[document.documentElement.lang] || {})
+    };
+
+
+    const title =
+        localizedWork.titleKey
+            ? currentTranslations[localizedWork.titleKey]
+            : localizedWork.title;
+
+
     const article =
         document.createElement(
             "article"
@@ -330,20 +523,39 @@ function createWorkCard(work) {
 
 
 
+    const availabilityOverlay =
+        localizedWork.externalUrl
+            ? "<div class=\"work-link-overlay\"><span class=\"work-link-caption\">" +
+                currentTranslations.availableOn +
+                "</span><a class=\"work-external-link\" href=\"" +
+                localizedWork.externalUrl +
+                "\" target=\"_blank\" rel=\"noopener noreferrer\" tabindex=\"-1\">" +
+                (localizedWork.externalLabel || "External link") +
+                "</a></div>"
+            : "";
+
+
+
     article.innerHTML = `
 
-        <div class="work-image">
+        <div
+            class="work-image${localizedWork.externalUrl ? " work-image--interactive" : ""}"
+            ${localizedWork.externalUrl ? 'role="button" tabindex="0" aria-expanded="false" aria-label="Show availability link"' : ""}
+        >
 
 
             <img
 
-                src="${work.image}"
+                src="${localizedWork.image}"
 
-                alt="${work.title}"
+                alt="${title}"
 
                 loading="lazy"
 
             >
+
+
+            ${availabilityOverlay}
 
 
         </div>
@@ -352,7 +564,7 @@ function createWorkCard(work) {
 
         <h3 class="work-title">
 
-            ${work.title}
+            ${title}
 
         </h3>
 
@@ -363,7 +575,7 @@ function createWorkCard(work) {
 
             <p class="work-meta">
 
-                ${currentTranslations[work.type]} • ${work.year}
+                ${currentTranslations[localizedWork.type]} • ${localizedWork.year}
 
             </p>
 
@@ -372,6 +584,82 @@ function createWorkCard(work) {
 
     `;
 
+
+
+    if(localizedWork.externalUrl){
+
+
+        const image =
+            article.querySelector(
+                ".work-image--interactive"
+            );
+
+
+        const link =
+            article.querySelector(
+                ".work-external-link"
+            );
+
+
+        const toggleAvailability = () => {
+
+
+            const isOpen =
+                article.classList.toggle(
+                    "is-availability-open"
+                );
+
+
+            image.setAttribute(
+                "aria-expanded",
+                String(isOpen)
+            );
+
+
+            link.setAttribute(
+                "tabindex",
+                isOpen ? "0" : "-1"
+            );
+
+
+        };
+
+
+        image.addEventListener(
+            "click",
+            toggleAvailability
+        );
+
+
+        image.addEventListener(
+            "keydown",
+            event => {
+
+
+                if(
+                    event.key === "Enter" ||
+                    event.key === " "
+                ){
+
+
+                    event.preventDefault();
+                    toggleAvailability();
+
+
+                }
+
+
+            }
+        );
+
+
+        link.addEventListener(
+            "click",
+            event => event.stopPropagation()
+        );
+
+
+    }
 
 
     return article;
@@ -635,6 +923,311 @@ function initializeCurrentYear(){
 
 
 /* ==========================================================
+   MACOS DESKTOP SECTION SCROLL
+   ========================================================== */
+
+
+function initializeMacSectionScroll(){
+
+
+    const isMacDesktop =
+        /Mac/.test(navigator.platform) &&
+        window.matchMedia("(min-width: 769px) and (pointer: fine)").matches &&
+        navigator.maxTouchPoints === 0;
+
+
+    if(
+        !isMacDesktop ||
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ){
+
+
+        return;
+
+
+    }
+
+
+    const sections =
+        Array.from(
+            document.querySelectorAll(
+                ".hero, .featured-exhibit, .section"
+            )
+        );
+
+
+    if(sections.length === 0){
+
+
+        return;
+
+
+    }
+
+
+    document.documentElement.classList.add(
+        "mac-smooth-section-scroll"
+    );
+
+
+    let isAnimating =
+        false;
+
+
+    let gestureEndTimer;
+
+
+    let scrollSettleTimer;
+
+
+    let isGestureActive =
+        false;
+
+
+    let isScrolling =
+        false;
+
+
+    function releaseWhenSettled(){
+
+
+        if(
+            !isGestureActive &&
+            !isScrolling
+        ){
+
+
+            isAnimating =
+                false;
+
+
+        }
+
+
+    }
+
+
+    function markGestureActivity(){
+
+
+        isGestureActive =
+            true;
+
+
+        window.clearTimeout(
+            gestureEndTimer
+        );
+
+
+        gestureEndTimer =
+            window.setTimeout(
+                () => {
+
+
+                    isGestureActive =
+                        false;
+
+
+                    releaseWhenSettled();
+
+
+                },
+                120
+            );
+
+
+    }
+
+
+    window.addEventListener(
+        "scroll",
+        () => {
+
+
+            if(!isAnimating){
+
+
+                return;
+
+
+            }
+
+
+            isScrolling =
+                true;
+
+
+            window.clearTimeout(
+                scrollSettleTimer
+            );
+
+
+            scrollSettleTimer =
+                window.setTimeout(
+                    () => {
+
+
+                        isScrolling =
+                            false;
+
+
+                        releaseWhenSettled();
+
+
+                    },
+                    100
+                );
+
+
+        },
+        { passive:true }
+    );
+
+
+    function getCurrentSectionIndex(){
+
+
+        let closestIndex =
+            0;
+
+
+        let closestDistance =
+            Infinity;
+
+
+        sections.forEach(
+            (section,index) => {
+
+
+                const distance =
+                    Math.abs(
+                        section.getBoundingClientRect().top
+                    );
+
+
+                if(distance < closestDistance){
+
+
+                    closestDistance =
+                        distance;
+
+
+                    closestIndex =
+                        index;
+
+
+                }
+
+
+            }
+        );
+
+
+        return closestIndex;
+
+
+    }
+
+
+    window.addEventListener(
+        "wheel",
+        event => {
+
+
+            if(event.ctrlKey){
+
+
+                return;
+
+
+            }
+
+
+            event.preventDefault();
+
+
+            markGestureActivity();
+
+
+            if(isAnimating){
+
+
+                return;
+
+
+            }
+
+
+            if(event.deltaY === 0){
+
+
+                return;
+
+
+            }
+
+
+            const direction =
+                event.deltaY > 0
+                    ? 1
+                    : -1;
+
+
+            const currentIndex =
+                getCurrentSectionIndex();
+
+
+            const targetIndex =
+                Math.max(
+                    0,
+                    Math.min(
+                        sections.length - 1,
+                        currentIndex + direction
+                    )
+                );
+
+
+
+            if(targetIndex === currentIndex){
+
+
+                return;
+
+
+            }
+
+
+            isAnimating =
+                true;
+
+
+            sections[targetIndex].scrollIntoView(
+                {
+
+
+                    behavior:"smooth",
+                    block:"start"
+
+
+                }
+            );
+
+
+
+
+
+        },
+        { passive:false }
+    );
+
+
+}
+
+
+
+
+
+/* ==========================================================
    SECTION NAVIGATION
    ========================================================== */
 
@@ -765,6 +1358,11 @@ function initializeSectionNavigation() {
 
 
                 }
+            );
+
+            document.body.classList.toggle(
+                "banner-focus",
+                current === 1
             );
 
 
@@ -992,12 +1590,64 @@ function initializeReveal(){
 
 }
 
+function updateFeaturedBanner(language) {
+
+
+    const desktopBanner =
+        document.querySelector(
+            ".hero-banner-desktop"
+        );
+
+
+    if(!desktopBanner) {
+
+
+        return;
+
+
+    }
+
+
+    desktopBanner.src =
+        language === "en"
+            ? "images/banner/Soon-banner.webp"
+            : "images/banner/Novel1-banner.webp";
+
+
+}
+
+
+
+
+
 /* ==========================================================
    LANGUAGE SYSTEM
    ========================================================== */
 
 
-async function loadLanguage(language){
+async function loadLanguage(
+    language,
+    animate = false
+){
+
+
+    if(animate){
+
+
+        document.body.classList.add(
+            "language-changing"
+        );
+
+
+        await new Promise(
+            resolve => setTimeout(
+                resolve,
+                140
+            )
+        );
+
+
+    }
 
 
     try{
@@ -1011,6 +1661,18 @@ async function loadLanguage(language){
 
         currentTranslations =
             await response.json();
+
+
+
+        updateFeaturedBanner(
+            language
+        );
+
+
+
+        updateDocumentLanguage(
+            language
+        );
 
 
 
@@ -1060,7 +1722,38 @@ async function loadLanguage(language){
             );
 
 
+
+    if(animate){
+
+
+        requestAnimationFrame(
+            () => {
+
+
+                document.body.classList.remove(
+                    "language-changing"
+                );
+
+
+            }
+        );
+
+
+    }
+
+
     }catch(error){
+
+
+        if(animate){
+
+
+            document.body.classList.remove(
+                "language-changing"
+            );
+
+
+        }
 
 
         console.error(
@@ -1462,7 +2155,8 @@ function initializeLanguageSwitcher(){
 
 
                     await loadLanguage(
-                        language
+                        language,
+                        true
                     );
 
 
@@ -1654,7 +2348,8 @@ function initializeLanguageSwitcher(){
 
 
                     await loadLanguage(
-                        language
+                        language,
+                        true
                     );
 
 
@@ -1713,7 +2408,8 @@ function initializeLanguageSwitcher(){
 
 
                     await loadLanguage(
-                        language
+                        language,
+                        true
                     );
 
 

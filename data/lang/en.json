@@ -1,25 +1,28 @@
 {
     "heroMotto": "Floreo ex existentia.",
 
-    "mainCollectionTitle": "Main Collection",
+    "mainCollectionTitle": "Books",
     "mainCollectionDescription": "The most important works and projects.",
 
-    "additionalWorksTitle": "Additional Works",
+    "additionalWorksTitle": "Novels",
     "additionalWorksDescription": "Novellas and other writings.",
 
     "authorTitle": "Author",
-    "authorDescription": "Here will be the author's words and the idea behind ARCHIVUM, a continuous fragment describing worlds, stories and imagination.",
+    "authorDescription": "Not every story is created to bring light. Some exist to reveal what has always remained hidden.\n\nIn my works, I explore the nature of living beings — their fears, desires, and downfalls. Archivum preserves records of these tales, opening a path to worlds where the boundary between light and darkness is never clear.",
 
     "connectTitle": "Connect",
 
     "contactTitle": "Contact",
-    "contactDescription": "Official contact will be available soon.",
 
     "worksTitle": "Works",
     "worksDescription": "Read selected stories:",
+    "videosDescription": "Videos:",
+
+    "availableOn": "Available on",
 
     "novella": "Novella",
     "book": "Book",
+    "comingSoon": "Coming Soon",
 
     "velanSight": "Even this page lies within Velan’s sight..."
 }

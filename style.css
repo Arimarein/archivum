@@ -174,12 +174,23 @@ body {
 
     transition:
 
-        background-color .4s ease,
+        background-color .75s ease,
 
         color .4s ease;
 
 
     isolation:isolate;
+
+
+}
+
+
+
+/* The featured banner takes visual focus while its navigation dot is active. */
+body.banner-focus {
+
+
+    background:#080807;
 
 
 }
@@ -210,6 +221,77 @@ body {
 
 
     z-index:0;
+
+
+    transition:opacity .75s ease;
+
+
+}
+
+
+
+body.banner-focus .ambient-light {
+
+
+    opacity:0;
+
+
+}
+
+
+/* Decorative line art remains beneath the interactive grid and page content. */
+.background-ornament {
+
+
+    position:fixed;
+
+    top:-31vmax;
+
+    right:-28vmax;
+
+    width:78vmax;
+
+    aspect-ratio:1;
+
+
+    background:url("images/background/rose1-background.webp") center / contain no-repeat;
+
+    opacity:.16;
+
+    pointer-events:none;
+
+    z-index:0;
+
+
+    transition:
+
+        opacity .75s ease,
+
+        filter .75s ease;
+
+
+}
+
+
+
+[data-theme="dark"] .background-ornament {
+
+
+    /* The original illustration has a black contour. */
+    filter:invert(1) sepia(.18) saturate(.5) brightness(1.12);
+
+    opacity:.13;
+
+
+}
+
+
+
+/* Keep the featured exhibit background image-only. */
+body.banner-focus .background-ornament {
+
+
+    opacity:0;
 
 
 }
@@ -379,10 +461,24 @@ body::after {
 
 
 
+body.banner-focus::before,
+body.banner-focus::after {
+
+
+    opacity:0;
+
+
+}
+
+
+
 body::before {
 
 
     opacity:.45;
+
+
+    transition:opacity .75s ease;
 
 
 }
@@ -408,6 +504,9 @@ body::after {
 
 
     opacity:.8;
+
+
+    transition:opacity .75s ease;
 
 
     -webkit-mask-image:
@@ -539,6 +638,31 @@ main {
 
 
 
+
+
+
+/* ==========================================================
+   LANGUAGE CHANGE TRANSITION
+   ========================================================== */
+
+
+[data-lang] {
+
+
+    transition:opacity .16s ease;
+
+
+}
+
+
+
+body.language-changing [data-lang] {
+
+
+    opacity:0;
+
+
+}
 
 
 
@@ -722,6 +846,40 @@ main > section:not(:first-child)::before {
 
 
 
+.site-motto.hero-motto-intro {
+
+
+    opacity:0;
+
+
+    transform:translateY(12px);
+
+
+}
+
+
+
+.site-motto.hero-motto-intro.is-visible {
+
+
+    opacity:1;
+
+
+    transform:translateY(0);
+
+
+    transition:
+
+
+        opacity .45s ease,
+
+        transform .45s ease;
+
+
+}
+
+
+
 
 
 
@@ -765,6 +923,16 @@ main > section:not(:first-child)::before {
     object-fit:contain;
 
     object-position:center;
+
+
+}
+
+
+
+.hero-banner-mobile {
+
+
+    display:none !important;
 
 
 }
@@ -921,24 +1089,103 @@ main > section:not(:first-child)::before {
 
 .work-image {
 
-
     width:100%;
 
     overflow:hidden;
 
+    position:relative;
 
 }
 
 
-
-
 .work-image img {
-
 
     width:100%;
 
     display:block;
 
+    transition:filter .35s ease;
+
+}
+
+
+.work-image--interactive {
+
+    cursor:pointer;
+
+}
+
+
+.work-image--interactive:focus-visible {
+
+    outline:1px solid currentColor;
+    outline-offset:5px;
+
+}
+
+
+.work-link-overlay {
+
+    position:absolute;
+    inset:0;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+
+    padding:20px;
+
+    opacity:0;
+    pointer-events:none;
+
+    text-align:center;
+
+    transition:opacity .35s ease;
+
+}
+
+
+.work-link-caption {
+
+    color:var(--text-primary);
+
+    font-family:var(--body-font);
+
+    font-size:.82rem;
+
+    letter-spacing:.08em;
+
+    text-transform:uppercase;
+
+}
+
+
+.work-external-link {
+
+    color:var(--text-primary);
+
+    font-family:var(--title-font);
+
+    font-size:1.35rem;
+
+    text-underline-offset:5px;
+
+}
+
+
+.is-availability-open .work-image img {
+
+    filter:blur(6px) brightness(.55);
+
+}
+
+
+.is-availability-open .work-link-overlay {
+
+    opacity:1;
+    pointer-events:auto;
 
 }
 
@@ -1651,6 +1898,9 @@ main > section:not(:first-child)::before {
     display:block;
 
 
+    white-space:pre-line;
+
+
     opacity:0;
 
 
@@ -1804,6 +2054,20 @@ main > section:not(:first-child)::before {
 }
 
 
+/* Firefox on macOS ends native snap without a transition.
+   The desktop-only script below replaces it with smooth section scrolling. */
+html.mac-smooth-section-scroll {
+
+
+    scroll-snap-type:none;
+
+
+}
+
+
+
+
+
 /* ==========================================================
    MOBILE
    ========================================================== */
@@ -1848,6 +2112,42 @@ main > section:not(:first-child)::before {
         top:20px;
 
         right:20px;
+
+
+    }
+
+
+
+    .background-ornament {
+
+
+        top:-48vmax;
+
+        right:-62vmax;
+
+        width:128vmax;
+
+        opacity:.12;
+
+
+    }
+
+
+
+    .hero-banner-desktop {
+
+
+        display:none !important;
+
+
+    }
+
+
+
+    .hero-banner-mobile {
+
+
+        display:block !important;
 
 
     }
@@ -2133,6 +2433,20 @@ main > section:not(:first-child)::before {
 
     opacity:.6;
 
+
+}
+
+
+.channel-link {
+
+    margin-top:35px;
+
+}
+
+
+.channel-link p {
+
+    margin-bottom:8px;
 
 }
 

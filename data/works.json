@@ -2,10 +2,10 @@
     "mainCollection": [
 
         {
-            "title": "Test01",
+            "titleKey": "comingSoon",
             "type": "book",
-            "year": "2027",
-            "image": "images/covers/test01-cover.webp"
+            "year": "2026",
+            "image": "images/about/Soon-cover.webp"
         }
 
     ],
@@ -14,10 +14,19 @@
     "additionalWorks": [
 
         {
-            "title": "Test14",
+            "title": "Nosi Extensions:Lapsus",
             "type": "novella",
             "year": "2026",
-            "image": "images/miniatures/Test14 Miniature.webp"
+            "image": "images/covers/novel1-cover.webp",
+            "externalUrl": "https://www.wattpad.com/story/415178667-nosi-extensions-lapsus",
+            "externalLabel": "Wattpad",
+            "localizations": {
+                "en": {
+                    "titleKey": "comingSoon",
+                    "image": "images/about/Soon-cover.webp",
+                    "externalUrl": null
+                }
+            }
         }
 
     ]
