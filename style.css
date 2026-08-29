@@ -1149,7 +1149,9 @@ main > section:not(:first-child)::before {
 
 .work-link-caption {
 
-    color:var(--text-primary);
+    color:#fff;
+
+    text-shadow:0 1px 8px rgba(0,0,0,.85);
 
     font-family:var(--body-font);
 
@@ -1164,7 +1166,9 @@ main > section:not(:first-child)::before {
 
 .work-external-link {
 
-    color:var(--text-primary);
+    color:#fff;
+
+    text-shadow:0 1px 8px rgba(0,0,0,.85);
 
     font-family:var(--title-font);
 
