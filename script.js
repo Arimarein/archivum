@@ -1590,7 +1590,10 @@ function initializeReveal(){
 
 }
 
-function updateFeaturedBanner(language) {
+function updateFeaturedBanner(
+    language,
+    animate = false
+) {
 
 
     const desktopBanner =
@@ -1608,10 +1611,124 @@ function updateFeaturedBanner(language) {
     }
 
 
-    desktopBanner.src =
+    const nextSource =
         language === "en"
             ? "images/banner/Soon-banner.webp"
             : "images/banner/Novel1-banner.webp";
+
+
+    if(desktopBanner.getAttribute("src") === nextSource){
+
+
+        desktopBanner.dataset.transitionId =
+            String(
+                Number(desktopBanner.dataset.transitionId || 0) + 1
+            );
+
+
+        desktopBanner.classList.remove(
+            "is-language-changing"
+        );
+
+
+        return;
+
+
+    }
+
+
+    if(
+        !animate ||
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ){
+
+
+        desktopBanner.src =
+            nextSource;
+
+
+        return;
+
+
+    }
+
+
+    const transitionId =
+        String(
+            Number(desktopBanner.dataset.transitionId || 0) + 1
+        );
+
+
+    desktopBanner.dataset.transitionId =
+        transitionId;
+
+
+    desktopBanner.classList.add(
+        "is-language-changing"
+    );
+
+
+    window.setTimeout(
+        () => {
+
+
+            if(desktopBanner.dataset.transitionId !== transitionId){
+
+
+                return;
+
+
+            }
+
+
+            const revealBanner = () => {
+
+
+                if(desktopBanner.dataset.transitionId === transitionId){
+
+
+                    requestAnimationFrame(
+                        () => {
+
+
+                            desktopBanner.classList.remove(
+                                "is-language-changing"
+                            );
+
+
+                        }
+                    );
+
+
+                }
+
+
+            };
+
+
+            desktopBanner.addEventListener(
+                "load",
+                revealBanner,
+                { once:true }
+            );
+
+
+            desktopBanner.src =
+                nextSource;
+
+
+            if(desktopBanner.complete){
+
+
+                revealBanner();
+
+
+            }
+
+
+        },
+        180
+    );
 
 
 }
@@ -1663,17 +1780,15 @@ async function loadLanguage(
             await response.json();
 
 
-
         updateFeaturedBanner(
-            language
+            language,
+            animate
         );
-
 
 
         updateDocumentLanguage(
             language
         );
-
 
 
         document
@@ -1686,7 +1801,6 @@ async function loadLanguage(
 
                     const key =
                         element.dataset.lang;
-
 
 
                     if(currentTranslations[key]){
@@ -1722,24 +1836,23 @@ async function loadLanguage(
             );
 
 
-
-    if(animate){
-
-
-        requestAnimationFrame(
-            () => {
+        if(animate){
 
 
-                document.body.classList.remove(
-                    "language-changing"
-                );
+            requestAnimationFrame(
+                () => {
 
 
-            }
-        );
+                    document.body.classList.remove(
+                        "language-changing"
+                    );
 
 
-    }
+                }
+            );
+
+
+        }
 
 
     }catch(error){
@@ -1770,6 +1883,7 @@ async function loadLanguage(
 
 
 
+
 /* ==========================================================
    AUTHOR TYPING ANIMATION
    ========================================================== */
@@ -1787,7 +1901,6 @@ function updateAuthorText(
         );
 
 
-
     if(!textElement){
 
 
@@ -1795,7 +1908,6 @@ function updateAuthorText(
             document.createElement(
                 "span"
             );
-
 
 
         element.appendChild(
@@ -1806,26 +1918,58 @@ function updateAuthorText(
     }
 
 
+    const wasTyping =
+        element.dataset.typing === "true";
+
+
+    const wasTyped =
+        element.dataset.typed === "true";
+
+
+    element.dataset.typingSession =
+        String(
+            Number(element.dataset.typingSession || 0) + 1
+        );
+
+
+    element.dataset.typing =
+        "false";
+
+
+    textElement.classList.remove(
+        "typing"
+    );
+
 
     textElement.dataset.fullText =
         text;
 
 
-
-    if(
-        element.dataset.typed === "true"
-    ){
+    if(wasTyped){
 
 
         textElement.textContent =
             text;
 
 
-    }else{
+        return;
 
 
-        textElement.textContent =
-            "";
+    }
+
+
+    textElement.textContent =
+        "";
+
+
+    if(wasTyping){
+
+
+        startAuthorTyping(
+            element.closest(
+                ".author-profile"
+            )
+        );
 
 
     }
@@ -1837,24 +1981,21 @@ function updateAuthorText(
 
 
 
-
 function startAuthorTyping(
     authorProfile
 ){
 
 
     const text =
-        authorProfile.querySelector(
+        authorProfile?.querySelector(
             ".author-text"
         );
-
 
 
     const textElement =
         text?.querySelector(
             "span"
         );
-
 
 
     if(
@@ -1871,18 +2012,15 @@ function startAuthorTyping(
     }
 
 
-
     const fullText =
         textElement.dataset.fullText ||
         textElement.textContent;
-
 
 
     const reduceMotion =
         window.matchMedia(
             "(prefers-reduced-motion: reduce)"
         ).matches;
-
 
 
     if(reduceMotion){
@@ -1892,10 +2030,8 @@ function startAuthorTyping(
             fullText;
 
 
-
         text.dataset.typed =
             "true";
-
 
 
         return;
@@ -1904,15 +2040,22 @@ function startAuthorTyping(
     }
 
 
+    const typingSession =
+        String(
+            Number(text.dataset.typingSession || 0) + 1
+        );
+
+
+    text.dataset.typingSession =
+        typingSession;
+
 
     textElement.textContent =
         "";
 
 
-
     text.dataset.typing =
         "true";
-
 
 
     textElement.classList.add(
@@ -1920,12 +2063,20 @@ function startAuthorTyping(
     );
 
 
-
-    let index = 0;
-
+    let index =
+        0;
 
 
     function typeNextCharacter(){
+
+
+        if(text.dataset.typingSession !== typingSession){
+
+
+            return;
+
+
+        }
 
 
         textElement.textContent +=
@@ -1934,15 +2085,13 @@ function startAuthorTyping(
             );
 
 
-
         index += 1;
-
 
 
         if(index < fullText.length){
 
 
-            setTimeout(
+            window.setTimeout(
                 typeNextCharacter,
                 24
             );
@@ -1956,6 +2105,9 @@ function startAuthorTyping(
             );
 
 
+            text.dataset.typing =
+                "false";
+
 
             text.dataset.typed =
                 "true";
@@ -1967,15 +2119,13 @@ function startAuthorTyping(
     }
 
 
-
-    setTimeout(
+    window.setTimeout(
         typeNextCharacter,
         500
     );
 
 
 }
-
 
 
 
