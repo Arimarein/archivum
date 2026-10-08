@@ -511,6 +511,16 @@ function createWorkCard(work) {
             : localizedWork.title;
 
 
+    const externalLinks =
+        localizedWork.externalLinks ||
+        (localizedWork.externalUrl
+            ? [{
+                label:localizedWork.externalLabel || "External link",
+                url:localizedWork.externalUrl
+            }]
+            : []);
+
+
     const article =
         document.createElement(
             "article"
@@ -524,14 +534,18 @@ function createWorkCard(work) {
 
 
     const availabilityOverlay =
-        localizedWork.externalUrl
+        externalLinks.length
             ? "<div class=\"work-link-overlay\"><span class=\"work-link-caption\">" +
                 currentTranslations.availableOn +
-                "</span><a class=\"work-external-link\" href=\"" +
-                localizedWork.externalUrl +
-                "\" target=\"_blank\" rel=\"noopener noreferrer\" tabindex=\"-1\">" +
-                (localizedWork.externalLabel || "External link") +
-                "</a></div>"
+                "</span><div class=\"work-external-links\">" +
+                externalLinks.map(
+                    link => "<a class=\"work-external-link\" href=\"" +
+                        link.url +
+                        "\" target=\"_blank\" rel=\"noopener noreferrer\" tabindex=\"-1\">" +
+                        link.label +
+                        "</a>"
+                ).join("") +
+                "</div></div>"
             : "";
 
 
@@ -539,8 +553,8 @@ function createWorkCard(work) {
     article.innerHTML = `
 
         <div
-            class="work-image${localizedWork.externalUrl ? " work-image--interactive" : ""}"
-            ${localizedWork.externalUrl ? 'role="button" tabindex="0" aria-expanded="false" aria-label="Show availability link"' : ""}
+            class="work-image${externalLinks.length ? " work-image--interactive" : ""}"
+            ${externalLinks.length ? 'role="button" tabindex="0" aria-expanded="false" aria-label="Show availability links"' : ""}
         >
 
 
@@ -586,7 +600,7 @@ function createWorkCard(work) {
 
 
 
-    if(localizedWork.externalUrl){
+    if(externalLinks.length){
 
 
         const image =
@@ -595,8 +609,8 @@ function createWorkCard(work) {
             );
 
 
-        const link =
-            article.querySelector(
+        const links =
+            article.querySelectorAll(
                 ".work-external-link"
             );
 
@@ -616,9 +630,11 @@ function createWorkCard(work) {
             );
 
 
-            link.setAttribute(
-                "tabindex",
-                isOpen ? "0" : "-1"
+            links.forEach(
+                link => link.setAttribute(
+                    "tabindex",
+                    isOpen ? "0" : "-1"
+                )
             );
 
 
@@ -653,9 +669,11 @@ function createWorkCard(work) {
         );
 
 
-        link.addEventListener(
-            "click",
-            event => event.stopPropagation()
+        links.forEach(
+            link => link.addEventListener(
+                "click",
+                event => event.stopPropagation()
+            )
         );
 
 
@@ -1614,7 +1632,25 @@ function updateFeaturedBanner(
     const nextSource =
         language === "en"
             ? "images/banner/Soon-banner.webp"
-            : "images/banner/Novel1-banner.webp";
+            : "images/banner/book1-banner.webp";
+
+
+    const mobileBanner =
+        document.querySelector(
+            ".hero-banner-mobile"
+        );
+
+
+    if(mobileBanner){
+
+
+        mobileBanner.src =
+            language === "en"
+                ? "images/banner/Soon-banner.webp"
+                : "images/banner/book1-banner-phone.webp";
+
+
+    }
 
 
     if(desktopBanner.getAttribute("src") === nextSource){
@@ -1748,6 +1784,10 @@ async function loadLanguage(
 ){
 
 
+    let ornamentTransition =
+        null;
+
+
     if(animate){
 
 
@@ -1756,12 +1796,11 @@ async function loadLanguage(
         );
 
 
-        await new Promise(
-            resolve => setTimeout(
-                resolve,
-                140
-            )
-        );
+        ornamentTransition =
+            updateDocumentLanguage(
+                language,
+                true
+            );
 
 
     }
@@ -1780,14 +1819,26 @@ async function loadLanguage(
             await response.json();
 
 
+        if(animate){
+
+
+            await ornamentTransition;
+
+
+        }else{
+
+
+            await updateDocumentLanguage(
+                language
+            );
+
+
+        }
+
+
         updateFeaturedBanner(
             language,
             animate
-        );
-
-
-        updateDocumentLanguage(
-            language
         );
 
 
@@ -2251,27 +2302,137 @@ function updateLanguageButton(
    ========================================================== */
 
 
-function updateDocumentLanguage(
-    language
+async function updateDocumentLanguage(
+    language,
+    animateOrnament = false
 ){
 
 
-    document.documentElement
-        .setAttribute(
-            "lang",
-            language
+    const ornament =
+        document.querySelector(
+            ".background-ornament"
         );
 
 
+    const shouldUseEnglishOrnament =
+        language === "en";
+
+
+    const applyLanguage = () => {
+
+
+        document.documentElement
+            .setAttribute(
+                "lang",
+                language
+            );
+
+
+    };
+
+
+    const applyOrnament = () => {
+
+
+        ornament.classList.toggle(
+            "is-english-ornament",
+            shouldUseEnglishOrnament
+        );
+
+
+        ornament.dataset.ornamentLanguage =
+            language;
+
+
+    };
+
+
+    if(!ornament){
+
+
+        applyLanguage();
+
+
+        return;
+
+
+    }
+
+
+    if(ornament.dataset.ornamentLanguage === language){
+
+
+        applyLanguage();
+
+
+        return;
+
+
+    }
+
+
+    if(
+        !animateOrnament ||
+        window.matchMedia(
+            "(prefers-reduced-motion: reduce)"
+        ).matches
+    ){
+
+
+        applyLanguage();
+        applyOrnament();
+
+
+        return;
+
+
+    }
+
+
+    ornament.classList.add(
+        "is-ornament-fading"
+    );
+
+
+    await new Promise(
+        resolve => window.setTimeout(
+            resolve,
+            240
+        )
+    );
+
+
+    applyLanguage();
+    applyOrnament();
+
+
+    await new Promise(
+        resolve => requestAnimationFrame(
+            () => {
+
+
+                ornament.classList.remove(
+                    "is-ornament-fading"
+                );
+
+
+                resolve();
+
+
+            }
+        )
+    );
+
+
+    await new Promise(
+        resolve => window.setTimeout(
+            resolve,
+            220
+        )
+    );
+
+
 }
-
-
-
-
-
-
-
-
 
 /* ==========================================================
    LANGUAGE SWITCHER

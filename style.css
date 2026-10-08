@@ -245,16 +245,16 @@ body.banner-focus .ambient-light {
 
     position:fixed;
 
-    top:-31vmax;
+    bottom:-35vmax;
 
-    right:-28vmax;
+    left:-29vmax;
 
     width:78vmax;
 
     aspect-ratio:1;
 
 
-    background:url("images/background/rose1-background.webp") center / contain no-repeat;
+    background:none;
 
     opacity:.16;
 
@@ -272,6 +272,70 @@ body.banner-focus .ambient-light {
 
 }
 
+
+
+.background-ornament::before,
+.background-ornament::after {
+
+    content:"";
+
+    position:absolute;
+    inset:0;
+
+    background:center / contain no-repeat;
+
+    transition:opacity .22s ease;
+
+}
+
+
+.background-ornament::before {
+
+    background-image:url("images/background/feather1-background.webp");
+
+}
+
+
+.background-ornament::after {
+
+    background-image:url("images/background/rose1-background.webp");
+
+    opacity:0;
+
+}
+
+
+/* English keeps the original rose ornament and its original placement. */
+.background-ornament.is-english-ornament {
+
+    top:-31vmax;
+    right:-28vmax;
+    bottom:auto;
+    left:auto;
+
+}
+
+
+.background-ornament.is-english-ornament::before {
+
+    opacity:0;
+
+}
+
+
+.background-ornament.is-english-ornament::after {
+
+    opacity:1;
+
+}
+
+
+.background-ornament.is-ornament-fading::before,
+.background-ornament.is-ornament-fading::after {
+
+    opacity:0;
+
+}
 
 
 [data-theme="dark"] .background-ornament {
@@ -1177,6 +1241,16 @@ main > section:not(:first-child)::before {
     letter-spacing:.08em;
 
     text-transform:uppercase;
+
+}
+
+
+.work-external-links {
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:8px;
 
 }
 
@@ -2142,14 +2216,25 @@ html.mac-smooth-section-scroll {
     .background-ornament {
 
 
-        top:-48vmax;
-
-        right:-62vmax;
+        top:auto;
+        right:auto;
+        bottom:-50vmax;
+        left:-62vmax;
 
         width:128vmax;
 
         opacity:.12;
 
+
+    }
+
+
+    .background-ornament.is-english-ornament {
+
+        top:-48vmax;
+        right:-62vmax;
+        bottom:auto;
+        left:auto;
 
     }
 
@@ -2454,6 +2539,23 @@ html.mac-smooth-section-scroll {
 
     opacity:.6;
 
+
+}
+
+
+.store-links {
+
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    margin-top:8px;
+
+}
+
+
+html:not([lang="pl"]) .polish-only {
+
+    display:none;
 
 }
 

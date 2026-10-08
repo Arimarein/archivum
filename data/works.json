@@ -2,10 +2,31 @@
     "mainCollection": [
 
         {
-            "titleKey": "comingSoon",
+            "title": "NoSi:Aeternus",
             "type": "book",
             "year": "2026",
-            "image": "images/about/Soon-cover.webp"
+            "image": "images/covers/book1-cover.webp",
+            "externalLinks": [
+                {
+                    "label": "Empik",
+                    "url": "https://www.empik.com/nosi-aeternus-marein-ariel,p1803234384,ebooki-i-mp3-p#ProductDescription"
+                },
+                {
+                    "label": "Apple Books",
+                    "url": "https://books.apple.com/pl/book/nosi-aeternus/id6818631566?l=pl"
+                },
+                {
+                    "label": "books2read",
+                    "url": "https://books2read.com/u/m2pqkd"
+                }
+            ],
+            "localizations": {
+                "en": {
+                    "titleKey": "comingSoon",
+                    "image": "images/about/Soon-cover.webp",
+                    "externalLinks": []
+                }
+            }
         }
 
     ],
